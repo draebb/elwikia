@@ -1,0 +1,5 @@
+.*
+!.gitignore
+data
+site
+*.pyc
