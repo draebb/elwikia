@@ -49,7 +49,7 @@ for path in glob.glob('../data/*.json'):
             url = page['url']
             title = page['title']
             print 'Generating %s page' % title
-            slug = url.replace('http://elementscommunity.com/wiki/', '') \
+            path = url.replace('http://elementscommunity.com/wiki/', '') \
                       .replace('http://cdn.elementscommunity.com/wiki/', '')
             node = lxml.html.fragment_fromstring(page['content'])
 
@@ -59,6 +59,6 @@ for path in glob.glob('../data/*.json'):
 
             html = template.replace('{{ title }}', page['title']) \
                            .replace('{{ content }}', lxml.html.tostring(node))
-            os.makedirs(slug)
-            with open('%s/index.html' % slug, 'w') as f:
+            os.makedirs(path)
+            with open('%s/index.html' % path, 'w') as f:
                 f.write(html.encode('utf8'))
