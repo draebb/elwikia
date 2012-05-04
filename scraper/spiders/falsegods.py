@@ -7,7 +7,7 @@ from scraper.spiders.base import BaseSpider
 
 
 class FalseGodSpider(BaseSpider):
-    name = 'false-gods'
+    name = 'falsegods'
     start_urls = ['http://elementscommunity.com/wiki/pve/false-gods/']
 
     rules = (
