@@ -1,4 +1,4 @@
-import json, os, errno, shutil, lxml.html, hashlib, glob, urlparse
+import json, os, errno, shutil, lxml.html, hashlib, glob, urlparse, re
 
 import requests
 
@@ -6,6 +6,11 @@ import requests
 template = None
 with open('template.html') as f:
     template = f.read()
+
+from scraper.spiders import cards, falsegods
+path_patterns = cards.path_patterns + falsegods.path_patterns
+re_objects = [re.compile('http://elementscommunity.com/%s' % pattern)
+              for pattern in path_patterns]
 
 
 def filter_node(node, selectors):
@@ -27,6 +32,16 @@ def process_images(node, page_url):
                 with open(path, 'wb') as f:
                     f.write(response.content)
         img.set('src', '/%s' % path)
+    return node
+
+def replace_links(node):
+    for a in node.xpath('//a'):
+        url = a.get('href')
+        for o in re_objects:
+            if o.match(url):
+                new_url = url.replace('http://elementscommunity.com/wiki', '')
+                a.set('href', new_url)
+                break
     return node
 
 
@@ -56,6 +71,7 @@ for path in glob.glob('../data/*.json'):
             node = filter_node(node, ('div.post-revisions', '.adsense',
                                       '.related', '.alert'))
             node = process_images(node, url)
+            node = replace_links(node)
 
             html = template.replace('{{ title }}', page['title']) \
                            .replace('{{ content }}', lxml.html.tostring(node))
