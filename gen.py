@@ -58,6 +58,7 @@ for path in os.listdir('.'):
     shutil.rmtree(path)
 
 for path in glob.glob('../data/*.json'):
+chosen_data = []
     with open(path) as f:
         for line in f:
             page = json.loads(line)
@@ -78,3 +79,9 @@ for path in glob.glob('../data/*.json'):
             os.makedirs(path)
             with open('%s/index.html' % path, 'w') as f:
                 f.write(html.encode('utf8'))
+
+            chosen_data.append({'title': title, 'path': path})
+
+with open('assets/chosen.json', 'w') as f:
+    chosen_data.sort(key=lambda page: page['title'])
+    f.write(json.dumps(chosen_data))
