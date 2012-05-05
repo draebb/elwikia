@@ -1,5 +1,9 @@
 .*
 !.gitignore
 data
-site
+site/*
+site/assets/chosen.json
+site/assets/style.css
+site/assets/js/*.js
+!site/assets/
 *.pyc
