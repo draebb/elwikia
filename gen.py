@@ -53,7 +53,7 @@ except OSError as error:
         raise
 
 for path in os.listdir('.'):
-    if path == 'img':
+    if path in ('img', 'assets'):
         continue
     shutil.rmtree(path)
 

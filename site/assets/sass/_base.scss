@@ -1,0 +1,132 @@
+body{
+  color: $color-base;
+  font-size: $base-font-size;
+  line-height: $base-line-height;
+  margin: 0 auto;
+  max-width: 700px;
+  padding: 0 10px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+  margin: ($base-line-height * 2) 0 $base-line-height;
+  padding: 0;
+}
+h1,
+h2,
+h3 {
+  font-weight: normal;
+}
+h1 {
+  @extend .font-size-xx-large;
+}
+h2 {
+  @extend .font-size-x-large;
+}
+h3 {
+  @extend .font-size-large;
+}
+
+a {
+  color: $link-color;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+ul, ol {
+  margin: 0 0 $base-line-height $base-line-height;
+  padding: 0;
+}
+
+ul ul,
+ol ol,
+ul ol,
+ol ul {
+  margin-bottom: 0;
+}
+
+dt {
+  font-weight: bold;
+  margin: 0 0 $base-line-height;
+  padding: 0;
+}
+dd {
+  margin: 0 0 $base-line-height $base-line-height;
+  padding: 0;
+}
+
+p {
+  margin: 0 0 $base-line-height;
+  padding: 0;
+}
+
+blockquote {
+  font-style: italic;
+  margin: 0 0 0 $base-line-height;
+  padding: 0;
+  cite {
+    font-style: normal;
+  }
+}
+
+pre {
+  @extend .font-size-small;
+  margin: 0 0 $base-line-height;
+  padding: $base-line-height;
+}
+
+pre,
+code {
+  background-color: #f3f3f3;
+}
+
+img {
+  height: auto;
+  max-width: 100%;
+}
+
+embed,
+object {
+  max-width: 100%;
+}
+
+fieldset {
+  border: 1px solid $border-color;
+  margin: 0 0 $base-line-height;
+  padding: ($base-line-height - 1px);
+}
+
+label {
+  @extend .font-size-small;
+  font-weight: bold;
+}
+
+table {
+  margin: 0 0 $base-line-height;
+  padding: 0;
+  width: 100%;
+}
+
+caption,
+th,
+td {
+  font-weight: normal;
+  text-align: left;
+}
+
+th {
+  font-weight: bold;
+  padding: ($base-line-height / 2) 0;
+}
+
+td {
+  padding: ($base-line-height / 2) 0;
+}

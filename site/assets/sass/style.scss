@@ -1,0 +1,25 @@
+@import 'variables';
+@import 'normalize';
+@import 'base';
+@import 'base_classes';
+
+
+#header {
+  margin: $base-line-height 0;
+}
+
+table {
+  @extend .font-size-small;
+  img {
+    max-width: none;
+  }
+  h6 {
+    @extend .font-size-small;
+    margin: 0;
+  }
+}
+
+td {
+  margin: 0;
+  padding: 0;
+}

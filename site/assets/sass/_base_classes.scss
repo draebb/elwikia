@@ -1,0 +1,31 @@
+@import 'compass/typography/vertical_rhythm';
+@import 'compass/utilities/general/clearfix';
+
+
+.font-size-xx-large {
+  @include adjust-font-size-to($xx-large);
+}
+
+.font-size-x-large {
+  @include adjust-font-size-to($x-large);
+}
+
+.font-size-large {
+  @include adjust-font-size-to($large);
+}
+
+.font-size-medium {
+  @include adjust-font-size-to($medium);
+}
+
+.font-size-small {
+  @include adjust-font-size-to($small);
+}
+
+.font-size-s-small {
+  @include adjust-font-size-to($s-small);
+}
+
+.clearfix {
+  @include legacy-pie-clearfix;
+}
