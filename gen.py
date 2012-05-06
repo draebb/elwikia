@@ -87,7 +87,7 @@ for file_path in glob.glob('../data/*.json'):
             file_name = os.path.basename(file_path).split('.')[0]
             category = category_map[file_name]
             chosen_data.append({'title': '%s (%s)' % (title, category),
-                                'path': path})
+                                'path': '/%s' % path})
 
 with open('assets/chosen.json', 'w') as f:
     chosen_data.sort(key=lambda page: page['title'])
