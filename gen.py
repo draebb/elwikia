@@ -58,9 +58,12 @@ for path in os.listdir('.'):
     if os.path.isdir(path):
         shutil.rmtree(path)
 
-for path in glob.glob('../data/*.json'):
 chosen_data = []
-    with open(path) as f:
+category_map = {'abilities': 'Ability',
+                'cards': 'Card',
+                'falsegods': 'False God'}
+for file_path in glob.glob('../data/*.json'):
+    with open(file_path) as f:
         for line in f:
             page = json.loads(line)
             url = page['url']
@@ -81,7 +84,10 @@ chosen_data = []
             with open('%s/index.html' % path, 'w') as f:
                 f.write(html.encode('utf8'))
 
-            chosen_data.append({'title': title, 'path': path})
+            file_name = os.path.basename(file_path).split('.')[0]
+            category = category_map[file_name]
+            chosen_data.append({'title': '%s (%s)' % (title, category),
+                                'path': path})
 
 with open('assets/chosen.json', 'w') as f:
     chosen_data.sort(key=lambda page: page['title'])
