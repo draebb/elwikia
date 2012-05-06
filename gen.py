@@ -55,7 +55,8 @@ except OSError as error:
 for path in os.listdir('.'):
     if path in ('img', 'assets'):
         continue
-    shutil.rmtree(path)
+    if os.path.isdir(path):
+        shutil.rmtree(path)
 
 for path in glob.glob('../data/*.json'):
 chosen_data = []
@@ -85,3 +86,8 @@ chosen_data = []
 with open('assets/chosen.json', 'w') as f:
     chosen_data.sort(key=lambda page: page['title'])
     f.write(json.dumps(chosen_data))
+
+with open('index.html', 'w') as f:
+    html = template.replace('{{ title }}', '') \
+                   .replace('{{ content }}', '')
+    f.write(html.encode('utf8'))
