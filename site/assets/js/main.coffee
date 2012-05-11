@@ -2,7 +2,6 @@ $ = jQuery
 
 $.ajax
     url:'/assets/chosen.json'
-    async: false
     dataType: 'json'
   .done (data) ->
     html = ['<select id="search">']
