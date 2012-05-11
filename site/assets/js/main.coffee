@@ -1,5 +1,7 @@
 $ = jQuery
 
+pjaxContainer = '#main'
+
 $.ajax
     url:'/assets/chosen.json'
     dataType: 'json'
@@ -14,9 +16,17 @@ $.ajax
     $('#search')
       .chosen()
       .change ->
-        window.location.pathname = this.value
+        $.pjax
+          url: this.value
+          container: pjaxContainer
+          fragment: pjaxContainer
+          timeout: 2000
 
     $('body').on 'keypress', (event) ->
       if event.which is 47 # '/'
         event.preventDefault()
         $('#search_chzn').mousedown()
+
+$('#main a[href^="/"]').pjax pjaxContainer,
+  fragment: pjaxContainer
+  timeout: 2000
