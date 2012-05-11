@@ -29,7 +29,7 @@ def process_images(node, page_url):
         if not os.path.exists(path):
             response = requests.get(url)
             if response.headers['content-type'].startswith('image'):
-                with open(path, 'wb') as f:
+                with open(path, 'w') as f:
                     f.write(response.content)
         img.set('src', '/%s' % path)
     return node
