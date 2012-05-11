@@ -25,7 +25,8 @@ def process_images(node, page_url):
             url = urlparse.urljoin(page_url, url)
 
         file_name = hashlib.sha1(url).hexdigest()
-        path = 'img/%s' % file_name
+        file_ext = os.path.splitext(url)[1]
+        path = 'img/%s%s' % (file_name, file_ext)
         if not os.path.exists(path):
             response = requests.get(url)
             if response.headers['content-type'].startswith('image'):
