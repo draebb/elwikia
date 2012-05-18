@@ -1,9 +1,10 @@
 .*
 !.gitignore
-data
+data/
 site/*
 site/assets/chosen.json
 site/assets/style.css
-site/assets/js/*.js
+site/assets/js/main.js
 !site/assets/
+site-built/
 *.pyc
