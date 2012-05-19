@@ -1,10 +1,11 @@
+*.pyc
 .*
-!.gitignore
-data/
-site/*
+data/*
+site/*/
+site/index.html
 site/assets/chosen.json
 site/assets/style.css
 site/assets/js/main.js
 !site/assets/
 site-built/
-*.pyc
+!.gitignore
