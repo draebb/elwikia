@@ -1,4 +1,4 @@
-import json, os, errno, shutil, lxml.html, hashlib, glob, urlparse, re
+import json, os, errno, shutil, lxml.html, hashlib, glob, urlparse, re, urllib
 
 import requests
 
@@ -7,16 +7,12 @@ template = None
 with open('template.html') as f:
     template = f.read()
 
-from scraper.spiders import cards, falsegods
-path_patterns = cards.path_patterns + falsegods.path_patterns
-re_objects = [re.compile('http://elementscommunity.com/%s' % pattern)
-              for pattern in path_patterns]
 
+def filter_node(node, xpaths):
+    for xpath in xpaths:
+        for node_to_remove in node.xpath(xpath):
+            node_to_remove.drop_tree()
 
-def filter_node(node, selectors):
-    for selector in selectors:
-        node.remove(node.cssselect(selector)[0])
-    return node
 
 def process_images(node, page_url):
     for img in node.xpath('//img'):
@@ -33,17 +29,16 @@ def process_images(node, page_url):
                 with open(path, 'w') as f:
                     f.write(response.content)
         img.set('src', '/%s' % path)
-    return node
 
-def replace_links(node):
+
+def replace_links(node, crawled_pages):
     for a in node.xpath('//a'):
         url = a.get('href')
-        for o in re_objects:
-            if o.match(url):
-                new_url = url.replace('http://elementscommunity.com/wiki', '')
-                a.set('href', new_url)
-                break
-    return node
+        slug = url.replace(base_url, '').replace('_', ' ')
+        slug = urllib.unquote(slug)
+        if slug.decode('utf8') in crawled_pages:
+            a.set('href', '/%s/' % urllib.quote(slug.replace(' ', '_'),
+                                                safe='()'))
 
 
 os.chdir('site')
@@ -59,36 +54,38 @@ for path in os.listdir('.'):
     if os.path.isdir(path):
         shutil.rmtree(path)
 
+base_url = 'http://elementsthegame.wikia.com/wiki/'
 chosen_data = []
-category_map = {'abilities': 'Ability',
-                'cards': 'Card',
-                'falsegods': 'False God'}
-for file_path in glob.glob('../data/*.json'):
-    with open(file_path) as f:
-        for line in f:
-            page = json.loads(line)
-            url = page['url']
-            title = page['title']
-            print 'Generating %s page' % title
-            path = url.replace('http://elementscommunity.com/wiki/', '') \
-                      .replace('http://cdn.elementscommunity.com/wiki/', '')
-            node = lxml.html.fragment_fromstring(page['content'])
+crawled_pages = []
+with open('../data/crawled_pages.json') as f:
+    crawled_pages = set(json.load(f))
 
-            node = filter_node(node, ('div.post-revisions', '.adsense',
-                                      '.related', '.alert'))
-            node = process_images(node, url)
-            node = replace_links(node)
+with open('../data/pages.jsonline') as f:
+    for line in f:
+        page = json.loads(line)
+        url = page['url']
+        title = page['title']
+        content = page['content']
 
-            html = template.replace('{{ title }}', page['title']) \
-                           .replace('{{ content }}', lxml.html.tostring(node))
-            os.makedirs(path)
-            with open('%s/index.html' % path, 'w') as f:
-                f.write(html.encode('utf8'))
+        print 'Generating %s page' % title
+        path = url.replace(base_url, '')
+        path = urllib.unquote(path.encode('utf8'))
+        node = lxml.html.fragment_fromstring(content, create_parent=True)
+        node.make_links_absolute(base_url=base_url)
 
-            file_name = os.path.basename(file_path).split('.')[0]
-            category = category_map[file_name]
-            chosen_data.append({'title': '%s (%s)' % (title, category),
-                                'path': '/%s' % path})
+        filter_node(node, ('//span[@class="editsection"]',
+                           '//a[text()="Edit data"]'))
+        process_images(node, url)
+        replace_links(node, crawled_pages)
+
+        html = template.replace('{{ title }}', title) \
+                       .replace('{{ content }}', lxml.html.tostring(node)) \
+        os.makedirs(path)
+        with open('%s/index.html' % path, 'w') as f:
+            f.write(html.encode('utf8'))
+
+        chosen_data.append({'title': title,
+                            'path': '/%s/' % urllib.quote(path)})
 
 with open('assets/chosen.json', 'w') as f:
     chosen_data.sort(key=lambda page: page['title'])
