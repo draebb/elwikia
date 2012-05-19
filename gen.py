@@ -66,6 +66,7 @@ with open('../data/pages.jsonline') as f:
         url = page['url']
         title = page['title']
         content = page['content']
+        attribution = '<a href="%s">Content source</a>' % url
 
         print 'Generating %s page' % title
         path = url.replace(base_url, '')
@@ -78,7 +79,8 @@ with open('../data/pages.jsonline') as f:
         process_images(node, url)
         replace_links(node, crawled_pages)
 
-        html = template.format(title=title, content=lxml.html.tostring(node))
+        html = template.format(title=title, content=lxml.html.tostring(node),
+                               attribution=attribution)
         os.makedirs(path)
         with open('%s/index.html' % path, 'w') as f:
             f.write(html.encode('utf8'))
@@ -91,5 +93,5 @@ with open('assets/chosen.json', 'w') as f:
     f.write(json.dumps(chosen_data))
 
 with open('index.html', 'w') as f:
-    html = template.format(title='', content='')
+    html = template.format(title='', content='', attribution='')
     f.write(html.encode('utf8'))
