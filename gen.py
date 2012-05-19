@@ -5,7 +5,7 @@ import requests
 
 template = None
 with open('template.html') as f:
-    template = f.read()
+    template = f.read().decode('utf8')
 
 
 def filter_node(node, xpaths):
@@ -78,8 +78,7 @@ with open('../data/pages.jsonline') as f:
         process_images(node, url)
         replace_links(node, crawled_pages)
 
-        html = template.replace('{{ title }}', title) \
-                       .replace('{{ content }}', lxml.html.tostring(node)) \
+        html = template.format(title=title, content=lxml.html.tostring(node))
         os.makedirs(path)
         with open('%s/index.html' % path, 'w') as f:
             f.write(html.encode('utf8'))
@@ -92,6 +91,5 @@ with open('assets/chosen.json', 'w') as f:
     f.write(json.dumps(chosen_data))
 
 with open('index.html', 'w') as f:
-    html = template.replace('{{ title }}', '') \
-                   .replace('{{ content }}', '')
+    html = template.format(title='', content='')
     f.write(html.encode('utf8'))
